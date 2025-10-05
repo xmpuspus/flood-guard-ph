@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FloodGuard PH - AI-powered Flood Control Project Monitoring</title>
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css" />
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Custom styles -->
+  <link rel="stylesheet" href="assets/css/variables.css">
+  <link rel="stylesheet" href="assets/css/layout.css">
+  <link rel="stylesheet" href="assets/css/chat.css">
+  <link rel="stylesheet" href="assets/css/map.css">
+  <link rel="stylesheet" href="assets/css/project.css">
+  <link rel="stylesheet" href="assets/css/modal.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Chat Panel -->
+    <aside class="chat-panel">
+      <header class="chat-header">
+        <div>
+          <h1>FloodGuard PH</h1>
+          <p class="subtitle">AI-powered Flood Control Project Monitoring</p>
+        </div>
+        <button id="settingsBtn" class="settings-btn" title="API Settings">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M12 1v6m0 6v6m5.2-13.2l-4.2 4.2m0 6l4.2 4.2M23 12h-6m-6 0H1m18.2 5.2l-4.2-4.2m0-6l4.2-4.2"></path>
+          </svg>
+        </button>
+      </header>
+      
+      <div class="chat-messages" id="chatMessages">
+        <div class="welcome-message">
+          <h2>Welcome to FloodGuard PH</h2>
+          <p>Explore 9,800+ flood control projects across the Philippines. Ask me anything:</p>
+          <ul>
+            <li>"Show me all projects in Palawan"</li>
+            <li>"Which contractor has the most projects?"</li>
+            <li>"What's the total budget for 2024?"</li>
+            <li>"Find projects over ₱15 million"</li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="chat-input-container">
+        <textarea 
+          id="chatInput" 
+          placeholder="Ask about flood control projects..."
+          rows="1"
+        ></textarea>
+        <button id="sendBtn" class="send-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="22" y1="2" x2="11" y2="13"></line>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+          </svg>
+        </button>
+      </div>
+    </aside>
+
+    <!-- Map Panel -->
+    <main class="map-panel">
+      <div id="map" class="map-container"></div>
+      
+      <!-- Floating controls -->
+      <div class="map-controls">
+        <button class="control-btn" id="resetView" title="Reset view">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
+            <path d="M21 3v5h-5"></path>
+            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
+            <path d="M3 21v-5h5"></path>
+          </svg>
+        </button>
+      </div>
+      
+      <!-- Stats overlay -->
+      <div class="stats-overlay" id="statsOverlay">
+        <div class="stat-item">
+          <span class="stat-label">Projects</span>
+          <span class="stat-value" id="projectCount">—</span>
+        </div>
+        <div class="stat-item">
+          <span class="stat-label">Total Budget</span>
+          <span class="stat-value" id="totalBudget">—</span>
+        </div>
+      </div>
+    </main>
+
+    <!-- Project Details Panel -->
+    <aside class="details-panel">
+      <div class="project-card" id="projectCard">
+        <p class="empty-state">
+          Click a project on the map or ask a question to see details
+        </p>
+      </div>
+      
+      <div class="news-feed" id="newsFeed">
+        <h3>Related News</h3>
+        <div class="news-items" id="newsItems">
+          <p class="empty-state-small">No news articles yet</p>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Loading overlay -->
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+        <p>Initializing FloodGuard PH...</p>
+  </div>
+
+  <!-- Settings Modal -->
+  <div class="modal-overlay" id="settingsModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>API Settings</h2>
+        <button class="modal-close" id="closeSettings">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="modal-description">Enter your API keys to use FloodGuard PH. Keys are stored only in your browser session and never saved to disk or sent to any server.</p>
+        
+        <div class="form-group">
+          <label for="anthropicKey">Anthropic API Key (Claude)</label>
+          <input 
+            type="password" 
+            id="anthropicKey" 
+            placeholder="sk-ant-..." 
+            autocomplete="off"
+          >
+          <small>Required for AI chat functionality</small>
+        </div>
+
+        <div class="form-group">
+          <label for="openaiKey">OpenAI API Key</label>
+          <input 
+            type="password" 
+            id="openaiKey" 
+            placeholder="sk-..." 
+            autocomplete="off"
+          >
+          <small>Required for semantic search and embeddings</small>
+        </div>
+
+        <div class="api-status" id="apiStatus"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="clearKeys">Clear Keys</button>
+        <button class="btn-primary" id="saveKeys">Save Keys</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+  <script type="module" src="assets/js/app.js"></script>
+</body>
+</html>
