@@ -766,6 +766,38 @@ async def chat_endpoint(websocket: WebSocket, session_id: str):
     # Other users in same session see updates
 ```
 
+## 🚀 Deployment
+
+### Deploy to Render (Recommended)
+
+FloodGuard PH is optimized for Render's free tier:
+
+**Quick Deploy:**
+1. Push to GitHub
+2. Connect to Render
+3. Deploy in 5 minutes
+
+See **[RENDER_QUICKSTART.md](RENDER_QUICKSTART.md)** for step-by-step instructions.
+
+**What's Included:**
+- ✅ All 9,800+ projects embedded automatically
+- ✅ User-provided API keys (no server storage)
+- ✅ Auto-deploy on git push
+- ✅ Free tier with cold starts
+
+**Files for Deployment:**
+- `render.yaml` - Render configuration
+- `build.sh` - Build script
+- `Procfile` - Start command
+- `runtime.txt` - Python 3.12
+- `DEPLOYMENT.md` - Detailed guide
+
+### Alternative Platforms
+
+**Railway:** Similar to Render, use `Procfile`
+**Heroku:** Use `Procfile` and `runtime.txt`
+**DigitalOcean App Platform:** Use `build.sh` and start command
+
 ## 📄 License
 
 MIT License - See LICENSE file for details
