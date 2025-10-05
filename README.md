@@ -1,48 +1,55 @@
-📌 Overview
+# FloodWatch PH
+
+## 📌 Overview
+
 FloodWatch PH is an intelligent chatbot interface that transforms how citizens explore Philippine flood control infrastructure data (2022–present). Through natural conversation powered by Claude Sonnet 4.5, users can ask questions, discover projects, and access related news—all while visualizing results on an interactive map.
-Example Conversations:
 
-"Show me all 2025 projects in Pangasinan"
-"Which contractor has the most projects over ₱10M?"
-"What flood control work is happening near Tarlac City?"
-"Tell me about GED Construction's recent projects"
+### Example Conversations
 
-The system responds with:
+- "Show me all 2025 projects in Pangasinan"
+- "Which contractor has the most projects over ₱10M?"
+- "What flood control work is happening near Tarlac City?"
+- "Tell me about GED Construction's recent projects"
 
-Conversational answers with context and insights
-Interactive map visualization of relevant projects
-Live news feed for selected projects and contractors
-Detailed project cards with budgets, dates, and locations
+### The system responds with
 
+- Conversational answers with context and insights
+- Interactive map visualization of relevant projects
+- Live news feed for selected projects and contractors
+- Detailed project cards with budgets, dates, and locations
 
-🏗️ System Architecture
-Technology Stack
-Backend:
+## 🏗️ System Architecture
 
-FastAPI – High-performance async API server
-LangChain – Conversational memory and retrieval chains
-Anthropic Claude Sonnet 4.5 – Advanced LLM for natural dialogue
-ChromaDB – Embedded vector database for semantic search
-OpenAI Embeddings (text-embedding-3-small) – Project & news vectorization
-Pandas + GeoPandas – Data processing and geospatial operations
+### Technology Stack
 
-Frontend (/demo_ui):
+**Backend:**
 
-Pure HTML/CSS/JavaScript – No framework overhead, maximum performance
-Leaflet.js – Industry-standard OpenStreetMap integration
-WebSocket – Real-time streaming chat responses
-CSS Grid + Flexbox – Modern, responsive three-pane layout
-Intersection Observer API – Smooth lazy-loading and animations
+- **FastAPI** – High-performance async API server
+- **LangChain** – Conversational memory and retrieval chains
+- **Anthropic Claude Sonnet 4.5** – Advanced LLM for natural dialogue
+- **ChromaDB** – Embedded vector database for semantic search
+- **OpenAI Embeddings** (text-embedding-3-small) – Project & news vectorization
+- **Pandas + GeoPandas** – Data processing and geospatial operations
 
-Data:
+**Frontend (/demo_ui):**
 
-CSV/GeoJSON – Project data (no heavy database required)
-RSS/NewsAPI – Live Philippine news aggregation
-In-memory spatial indexing – Fast geospatial queries
+- **Pure HTML/CSS/JavaScript** – No framework overhead, maximum performance
+- **Leaflet.js** – Industry-standard OpenStreetMap integration
+- **WebSocket** – Real-time streaming chat responses
+- **CSS Grid + Flexbox** – Modern, responsive three-pane layout
+- **Intersection Observer API** – Smooth lazy-loading and animations
 
+**Data:**
 
-🧭 UI/UX Design Philosophy
-Global Layout
+- **CSV/GeoJSON** – Project data (no heavy database required)
+- **RSS/NewsAPI** – Live Philippine news aggregation
+- **In-memory spatial indexing** – Fast geospatial queries
+
+## 🧭 UI/UX Design Philosophy
+
+### Global Layout
+
+```
 ┌─────────────┬──────────────────────┬─────────────────┐
 │   CHAT      │      MAP             │   PROJECT       │
 │   PANEL     │   (OpenStreetMap)    │   DETAILS       │
@@ -52,33 +59,38 @@ Global Layout
 │  • Input    │  • Clustering        │  • News feed    │
 │  • History  │  • Popups            │  • Metadata     │
 └─────────────┴──────────────────────┴─────────────────┘
-Design Standards
-Visual Excellence:
+```
 
-Glassmorphism – Frosted glass panels with backdrop blur
-Smooth animations – 60fps transitions, micro-interactions
-Typography – Inter font family, perfect line-height ratios
-Color system – WCAG AAA contrast, semantic color palette
-Shadows & depth – Layered elevation system (Google Material-inspired)
+### Design Standards
 
-Interaction Design:
+**Visual Excellence:**
 
-Progressive disclosure – Show complexity only when needed
-Optimistic UI – Instant feedback before server response
-Skeleton loaders – Perceived performance improvements
-Toast notifications – Non-intrusive status updates
-Keyboard shortcuts – Full accessibility support
+- **Glassmorphism** – Frosted glass panels with backdrop blur
+- **Smooth animations** – 60fps transitions, micro-interactions
+- **Typography** – Inter font family, perfect line-height ratios
+- **Color system** – WCAG AAA contrast, semantic color palette
+- **Shadows & depth** – Layered elevation system (Google Material-inspired)
 
-Responsive Behavior:
+**Interaction Design:**
 
-Mobile-first – Collapses to stacked layout on small screens
-Tablet optimization – Two-pane layout (chat+map or map+details)
-Desktop excellence – Full three-pane experience
+- **Progressive disclosure** – Show complexity only when needed
+- **Optimistic UI** – Instant feedback before server response
+- **Skeleton loaders** – Perceived performance improvements
+- **Toast notifications** – Non-intrusive status updates
+- **Keyboard shortcuts** – Full accessibility support
 
+**Responsive Behavior:**
 
-🧱 Data Architecture
-Projects Data Schema
-python# CSV/GeoJSON Structure
+- **Mobile-first** – Collapses to stacked layout on small screens
+- **Tablet optimization** – Two-pane layout (chat+map or map+details)
+- **Desktop excellence** – Full three-pane experience
+
+## 🧱 Data Architecture
+
+### Projects Data Schema
+
+```python
+# CSV/GeoJSON Structure
 {
   "project_id": "P00941153LZ_25AG0078",
   "region": "Region I",
@@ -99,23 +111,28 @@ python# CSV/GeoJSON Structure
   "lon": 119.96915518,
   "geom": {"type": "Point", "coordinates": [119.96915518, 16.09684657]}
 }
-ChromaDB Collections
-1. projects_collection
+```
 
-Documents: Concatenated project metadata (title + contractor + city + type + year)
-Metadata: All project fields for filtering
-Embeddings: OpenAI text-embedding-3-small (1536 dimensions)
+### ChromaDB Collections
 
-2. news_collection
+**1. projects_collection**
 
-Documents: News article title + snippet + source
-Metadata: {url, published_date, source, related_projects: []}
-Embeddings: Same model for semantic search
+- **Documents:** Concatenated project metadata (title + contractor + city + type + year)
+- **Metadata:** All project fields for filtering
+- **Embeddings:** OpenAI text-embedding-3-small (1536 dimensions)
 
+**2. news_collection**
 
-🧠 Conversational AI Pipeline
-LangChain Architecture
-python# Conversation Flow
+- **Documents:** News article title + snippet + source
+- **Metadata:** `{url, published_date, source, related_projects: []}`
+- **Embeddings:** Same model for semantic search
+
+## 🧠 Conversational AI Pipeline
+
+### LangChain Architecture
+
+```python
+# Conversation Flow
 User Input → LangChain Agent → Tools → Response Generation
 
 Tools Available:
@@ -124,7 +141,11 @@ Tools Available:
 3. ContractorLookupTool → Find all projects by contractor
 4. GeospatialSearchTool → Radius/bbox queries with GeoPandas
 5. NewsFetchTool → Retrieve related news articles
-Prompt Engineering Strategy
+```
+
+### Prompt Engineering Strategy
+
+```
 System Prompt (Claude Sonnet 4.5):
 You are FloodWatch PH Assistant, an expert on Philippine flood control 
 infrastructure projects from 2022-2025. You help citizens understand 
@@ -141,24 +162,33 @@ Guidelines:
 
 Available data: {num_projects} projects totaling ₱{total_budget}
 Current conversation context: {chat_history}
-Conversation Memory:
+```
 
-Buffer Memory – Last 10 messages for context
-Summary Memory – Compress older conversations
-Entity Memory – Track mentioned contractors, locations, projects
+**Conversation Memory:**
 
+- **Buffer Memory** – Last 10 messages for context
+- **Summary Memory** – Compress older conversations
+- **Entity Memory** – Track mentioned contractors, locations, projects
 
-🌐 API Architecture
-Core Endpoints
-POST /api/chat (WebSocket)
+## 🌐 API Architecture
+
+### Core Endpoints
+
+#### POST /api/chat (WebSocket)
+
 Streaming conversational interface with tool execution.
-Request:
-json{
+
+**Request:**
+```json
+{
   "message": "Show me 2025 projects in Pangasinan over ₱4M",
   "session_id": "user_abc123"
 }
-Response Stream:
-json// 1. Acknowledgment
+```
+
+**Response Stream:**
+```json
+// 1. Acknowledgment
 {"type": "status", "message": "Searching projects..."}
 
 // 2. Tool execution trace
@@ -177,10 +207,15 @@ json// 1. Acknowledgment
 
 // 6. News items
 {"type": "news", "data": [...]}
-POST /api/search
+```
+
+#### POST /api/search
+
 Direct project search with filters (for map interactions).
-Request:
-json{
+
+**Request:**
+```json
+{
   "filters": {
     "year": [2024, 2025],
     "contractor": "GED CONSTRUCTION",
@@ -196,8 +231,11 @@ json{
   "limit": 100,
   "sort": {"field": "award_php", "order": "desc"}
 }
-Response:
-json{
+```
+
+**Response:**
+```json
+{
   "projects": [...],
   "total": 47,
   "stats": {
@@ -207,10 +245,15 @@ json{
     "project_types": {"Construction": 23, "Rehabilitation": 24}
   }
 }
-GET /api/news?project_id=X or ?contractor=Y
+```
+
+#### GET /api/news?project_id=X or ?contractor=Y
+
 Fetch related news articles.
-Response:
-json{
+
+**Response:**
+```json
+{
   "articles": [
     {
       "title": "DPWH completes flood control project in Alaminos",
@@ -222,8 +265,11 @@ json{
     }
   ]
 }
+```
 
-🗂️ Project Structure
+## 🗂️ Project Structure
+
+```
 floodwatch-ph/
 ├── backend/
 │   ├── main.py                 # FastAPI app entry
@@ -285,16 +331,20 @@ floodwatch-ph/
 ├── docker-compose.yml
 ├── Makefile
 └── README.md
+```
 
-🚀 Setup & Deployment
-Prerequisites
+## 🚀 Setup & Deployment
 
-Python 3.11+
-Node.js 18+ (optional, for build tools)
-Docker & Docker Compose (recommended)
+### Prerequisites
 
-Environment Variables
-bash# .env
+- Python 3.11+
+- Node.js 18+ (optional, for build tools)
+- Docker & Docker Compose (recommended)
+
+### Environment Variables
+
+```bash
+# .env
 ANTHROPIC_API_KEY=sk-ant-xxx          # Claude Sonnet 4.5
 OPENAI_API_KEY=sk-xxx                 # OpenAI embeddings
 NEWS_API_KEY=xxx                      # NewsAPI.org (optional)
@@ -305,8 +355,12 @@ PROJECTS_GEOJSON=./data/projects.geojson
 
 CORS_ORIGINS=http://localhost:3000,http://localhost:8000
 LOG_LEVEL=INFO
-Local Development
-bash# 1. Clone repository
+```
+
+### Local Development
+
+```bash
+# 1. Clone repository
 git clone https://github.com/yourorg/floodwatch-ph.git
 cd floodwatch-ph
 
@@ -328,8 +382,12 @@ uvicorn backend.main:app --reload --port 8000
 
 # 5. Open browser
 open http://localhost:8000/demo_ui
-Docker Deployment
-yaml# docker-compose.yml
+```
+
+### Docker Deployment
+
+```yaml
+# docker-compose.yml
 version: '3.8'
 
 services:
@@ -344,14 +402,21 @@ services:
       - ./chroma_data:/app/chroma_data
       - ./data:/app/data
     command: uvicorn backend.main:app --host 0.0.0.0 --port 8000
-bash# Build and run
+```
+
+```bash
+# Build and run
 docker-compose up --build
 
 # Access at http://localhost:8000/demo_ui
+```
 
-🎨 Frontend Implementation Guide
-HTML Structure (demo_ui/index.html)
-html<!DOCTYPE html>
+## 🎨 Frontend Implementation Guide
+
+### HTML Structure (demo_ui/index.html)
+
+```html
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -445,8 +510,12 @@ html<!DOCTYPE html>
   <script type="module" src="assets/js/app.js"></script>
 </body>
 </html>
-CSS Design Tokens (assets/css/variables.css)
-css:root {
+```
+
+### CSS Design Tokens (assets/css/variables.css)
+
+```css
+:root {
   /* Color Palette */
   --primary-blue: #2563eb;
   --primary-blue-dark: #1d4ed8;
@@ -503,8 +572,12 @@ css:root {
     --glass-bg: rgba(15, 23, 42, 0.8);
   }
 }
-JavaScript Architecture (assets/js/app.js)
-javascript// Main application controller
+```
+
+### JavaScript Architecture (assets/js/app.js)
+
+```javascript
+// Main application controller
 import { ChatManager } from './chat.js';
 import { MapController } from './map.js';
 import { ProjectRenderer } from './project.js';
@@ -562,10 +635,14 @@ class FloodWatchApp {
 document.addEventListener('DOMContentLoaded', () => {
   window.app = new FloodWatchApp();
 });
+```
 
-🧪 Testing Strategy
-Unit Tests
-python# tests/test_chat.py
+## 🧪 Testing Strategy
+
+### Unit Tests
+
+```python
+# tests/test_chat.py
 import pytest
 from backend.services.llm_service import LLMService
 
@@ -578,8 +655,12 @@ def test_budget_parsing():
     llm = LLMService()
     result = llm.parse_query("projects over ₱4M")
     assert result.filters['min_award_php'] == 4_000_000
-Integration Tests
-python# tests/test_search.py
+```
+
+### Integration Tests
+
+```python
+# tests/test_search.py
 def test_search_accuracy():
     response = client.post('/api/search', json={
         'filters': {'year': 2025, 'region': 'Region I'}
@@ -587,19 +668,28 @@ def test_search_accuracy():
     projects = response.json()['projects']
     assert all(p['year'] == 2025 for p in projects)
     assert all(p['region'] == 'Region I' for p in projects)
-Performance Benchmarks
-python# tests/test_performance.py
+```
+
+### Performance Benchmarks
+
+```python
+# tests/test_performance.py
 def test_chat_latency():
     # First response < 2s, streaming < 100ms/token
     start = time.time()
     response = websocket.send({"message": "Show projects"})
     first_token = time.time() - start
     assert first_token < 2.0
+```
 
-📊 Sample Queries & Responses
-Query 1: Regional Overview
-User: "What flood control work is happening in Region I?"
-Response:
+## 📊 Sample Queries & Responses
+
+### Query 1: Regional Overview
+
+**User:** "What flood control work is happening in Region I?"
+
+**Response:**
+```
 Region I has 47 active flood control projects totaling ₱245.3 million. 
 The work is concentrated in Pangasinan (34 projects) and La Union (13 projects).
 
@@ -609,10 +699,15 @@ Top contractors:
 
 Most common project type is "Construction of Flood Mitigation Structure" 
 (23 projects). Would you like to see the largest projects or filter by city?
-[Map zooms to Region I, pins cluster by contractor]
-Query 2: Contractor Deep Dive
-User: "Tell me about GED Construction"
-Response:
+```
+*[Map zooms to Region I, pins cluster by contractor]*
+
+### Query 2: Contractor Deep Dive
+
+**User:** "Tell me about GED Construction"
+
+**Response:**
+```
 GED Construction has been awarded 12 flood control contracts in 2025, 
 all in Pangasinan's 1st District. Total awards: ₱58.2M
 
@@ -625,11 +720,15 @@ Recent news mentions completion of 3 projects ahead of schedule.
 
 ⚠️ Note: 8/12 projects are concentrated in Alaminos City. 
 Would you like to see the geographic distribution?
-[Project cards slide in on right, news feed populates]
+```
+*[Project cards slide in on right, news feed populates]*
 
-🎯 Advanced Features
-1. Permalink Generation
-javascript// Encode current state in URL
+## 🎯 Advanced Features
+
+### 1. Permalink Generation
+
+```javascript
+// Encode current state in URL
 function generatePermalink() {
   const state = {
     query: currentQuery,
@@ -640,8 +739,12 @@ function generatePermalink() {
   const encoded = btoa(JSON.stringify(state));
   return `${window.location.origin}/?s=${encoded}`;
 }
-2. CSV Export
-python# backend/api/export.py
+```
+
+### 2. CSV Export
+
+```python
+# backend/api/export.py
 @router.get("/api/export/csv")
 async def export_projects(filters: ProjectFilters):
     df = search_service.search(filters).to_dataframe()
@@ -651,9 +754,26 @@ async def export_projects(filters: ProjectFilters):
         media_type="text/csv",
         headers={"Content-Disposition": "attachment; filename=projects.csv"}
     )
-3. Real-time Collaboration
-python# Multi-user session sharing via Redis
+```
+
+### 3. Real-time Collaboration
+
+```python
+# Multi-user session sharing via Redis
 @router.websocket("/api/chat/{session_id}")
 async def chat_endpoint(websocket: WebSocket, session_id: str):
     await redis.publish(f"session:{session_id}", message)
     # Other users in same session see updates
+```
+
+## 📄 License
+
+MIT License - See LICENSE file for details
+
+## 🤝 Contributing
+
+Contributions are welcome! Please read CONTRIBUTING.md for guidelines.
+
+## 📧 Contact
+
+For questions or feedback, please open an issue on GitHub.
