@@ -1,0 +1,23 @@
+services:
+  # Web Service (Backend + Frontend)
+  - type: web
+    name: floodguard-ph
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt && python scripts/embed_projects.py
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: PYTHONPATH
+        value: .
+      - key: ANTHROPIC_API_KEY
+        value: dummy
+      - key: OPENAI_API_KEY
+        value: dummy
+      - key: CORS_ORIGINS
+        value: "*"
+      - key: LOG_LEVEL
+        value: INFO
+    healthCheckPath: /
+    autoDeploy: true

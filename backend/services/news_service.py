@@ -1,3 +1,4 @@
+import asyncio
 import hashlib
 import logging
 import re
@@ -82,44 +83,76 @@ class NewsService:
         return " ".join(meaningful[:6])
     
     async def _web_search(self, query: str, max_results: int = 5) -> list[NewsArticle]:
-        """Perform web search using DuckDuckGo HTML scraping"""
+        """Perform web search using DuckDuckGo HTML scraping with retry logic"""
         articles = []
         
-        try:
-            # Use DuckDuckGo HTML search (no API key needed)
-            search_url = "https://html.duckduckgo.com/html/"
-            params = {"q": query}
-            
-            # Create SSL context that doesn't verify certificates
-            import ssl
-            ssl_context = ssl.create_default_context()
-            ssl_context.check_hostname = False
-            ssl_context.verify_mode = ssl.CERT_NONE
-            
-            connector = aiohttp.TCPConnector(ssl=ssl_context)
-            
-            async with aiohttp.ClientSession(connector=connector) as session:
-                async with session.post(
-                    search_url,
-                    data=params,
-                    headers={
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
-                    },
-                    timeout=aiohttp.ClientTimeout(total=10)
-                ) as response:
-                    if response.status == 200:
-                        html = await response.text()
-                        articles = self._parse_duckduckgo_results(html, max_results)
-            
-            logger.info(f"Found {len(articles)} articles from web search")
-            
-        except Exception as e:
-            logger.error(f"Error performing web search: {e}")
-            # Fallback to RSS feeds
+        # FIX 2: Rotate User-Agents and add retry logic
+        user_agents = [
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0"
+        ]
+        
+        max_retries = 3
+        
+        for attempt in range(max_retries):
             try:
-                articles = await self._fetch_live_news(query, max_results)
-            except Exception as fallback_error:
-                logger.error(f"Fallback RSS search also failed: {fallback_error}")
+                # Use DuckDuckGo HTML search (no API key needed)
+                search_url = "https://html.duckduckgo.com/html/"
+                params = {"q": query}
+                
+                # FIX 1: SSL context that doesn't verify certificates
+                import ssl
+                ssl_context = ssl.create_default_context()
+                ssl_context.check_hostname = False
+                ssl_context.verify_mode = ssl.CERT_NONE
+                
+                connector = aiohttp.TCPConnector(ssl=ssl_context)
+                
+                # Rotate user agent on each retry
+                user_agent = user_agents[attempt % len(user_agents)]
+                
+                async with aiohttp.ClientSession(connector=connector) as session:
+                    async with session.post(
+                        search_url,
+                        data=params,
+                        headers={
+                            "User-Agent": user_agent,
+                            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+                            "Accept-Language": "en-US,en;q=0.5",
+                            "Accept-Encoding": "gzip, deflate",
+                            "DNT": "1",
+                            "Connection": "keep-alive",
+                            "Upgrade-Insecure-Requests": "1"
+                        },
+                        timeout=aiohttp.ClientTimeout(total=30)  # Increased timeout from 10 to 30
+                    ) as response:
+                        if response.status == 200:
+                            html = await response.text()
+                            articles = self._parse_duckduckgo_results(html, max_results)
+                            
+                            if articles:  # Success!
+                                logger.info(f"Found {len(articles)} articles from web search (attempt {attempt + 1})")
+                                return articles
+                        else:
+                            logger.warning(f"Web search returned status {response.status} (attempt {attempt + 1})")
+                
+                # Wait before retry (exponential backoff)
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(2 ** attempt)  # 1s, 2s, 4s
+            
+            except Exception as e:
+                logger.error(f"Web search attempt {attempt + 1} failed: {e}")
+                if attempt < max_retries - 1:
+                    await asyncio.sleep(2 ** attempt)
+                else:
+                    # Final attempt failed, fallback to RSS
+                    logger.info("All web search attempts failed, falling back to RSS feeds")
+                    try:
+                        articles = await self._fetch_live_news(query, max_results)
+                    except Exception as fallback_error:
+                        logger.error(f"Fallback RSS search also failed: {fallback_error}")
         
         return articles
     
