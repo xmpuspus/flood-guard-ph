@@ -1,0 +1,443 @@
+/**
+ * Dark Mode Theme
+ *
+ * Enhancement #24: Dark Mode
+ * Complete dark theme with automatic system preference detection
+ */
+
+/* Dark mode variables */
+:root.dark-mode {
+    /* Background colors */
+    --bg-primary: #1a1d23;
+    --bg-secondary: #242831;
+    --bg-tertiary: #2d3139;
+    --bg-hover: #373b47;
+
+    /* Text colors */
+    --text-primary: #e4e6eb;
+    --text-secondary: #b0b3b8;
+    --text-tertiary: #8a8d91;
+
+    /* Border colors */
+    --border-color: #3a3d46;
+    --border-hover: #4e5258;
+
+    /* Accent colors */
+    --primary-blue: #4a9eff;
+    --primary-blue-hover: #6bb0ff;
+
+    /* Card shadows */
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.5);
+    --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.6);
+
+    /* Status colors (adjusted for dark mode) */
+    --success: #46c93a;
+    --warning: #ffc107;
+    --error: #ff5252;
+    --info: #29b6f6;
+}
+
+/* Dark mode body styles */
+.dark-mode {
+    background: var(--bg-primary);
+    color: var(--text-primary);
+}
+
+/* Dark mode text */
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode h3,
+.dark-mode h4,
+.dark-mode h5,
+.dark-mode h6 {
+    color: var(--text-primary);
+}
+
+.dark-mode p,
+.dark-mode span,
+.dark-mode div {
+    color: var(--text-primary);
+}
+
+.dark-mode .text-muted {
+    color: var(--text-secondary) !important;
+}
+
+/* Dark mode inputs */
+.dark-mode input,
+.dark-mode textarea,
+.dark-mode select {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+.dark-mode input:focus,
+.dark-mode textarea:focus,
+.dark-mode select:focus {
+    background: var(--bg-tertiary);
+    border-color: var(--primary-blue);
+}
+
+.dark-mode input::placeholder,
+.dark-mode textarea::placeholder {
+    color: var(--text-tertiary);
+}
+
+/* Dark mode buttons */
+.dark-mode .btn {
+    color: var(--text-primary);
+}
+
+.dark-mode .btn-primary {
+    background: var(--primary-blue);
+    border-color: var(--primary-blue);
+}
+
+.dark-mode .btn-primary:hover {
+    background: var(--primary-blue-hover);
+    border-color: var(--primary-blue-hover);
+}
+
+.dark-mode .btn-secondary {
+    background: var(--bg-tertiary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+.dark-mode .btn-secondary:hover {
+    background: var(--bg-hover);
+    border-color: var(--border-hover);
+}
+
+/* Dark mode cards */
+.dark-mode .card,
+.dark-mode .project-card,
+.dark-mode .news-card {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-sm);
+}
+
+.dark-mode .card:hover,
+.dark-mode .project-card:hover,
+.dark-mode .news-card:hover {
+    background: var(--bg-tertiary);
+    box-shadow: var(--shadow-md);
+}
+
+/* Dark mode modals */
+.dark-mode .modal-content {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+.dark-mode .modal-header {
+    border-bottom-color: var(--border-color);
+}
+
+.dark-mode .modal-footer {
+    border-top-color: var(--border-color);
+}
+
+/* Dark mode chat */
+.dark-mode #chatMessages {
+    background: var(--bg-primary);
+}
+
+.dark-mode .chat-message {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+.dark-mode .chat-message.user {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.dark-mode .chat-message.assistant {
+    background: var(--bg-tertiary);
+}
+
+.dark-mode #chatInput {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+/* Dark mode sidebar */
+.dark-mode .sidebar {
+    background: var(--bg-secondary);
+    border-right-color: var(--border-color);
+}
+
+/* Dark mode nav */
+.dark-mode .navbar {
+    background: var(--bg-secondary);
+    border-bottom-color: var(--border-color);
+}
+
+/* Dark mode dropdowns */
+.dark-mode .dropdown-menu {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+.dark-mode .dropdown-item {
+    color: var(--text-primary);
+}
+
+.dark-mode .dropdown-item:hover {
+    background: var(--bg-hover);
+}
+
+/* Dark mode tables */
+.dark-mode table {
+    color: var(--text-primary);
+}
+
+.dark-mode th {
+    background: var(--bg-tertiary);
+    border-color: var(--border-color);
+}
+
+.dark-mode td {
+    border-color: var(--border-color);
+}
+
+.dark-mode tr:hover {
+    background: var(--bg-hover);
+}
+
+/* Dark mode code blocks */
+.dark-mode code,
+.dark-mode pre {
+    background: var(--bg-tertiary);
+    color: #f8f8f2;
+    border-color: var(--border-color);
+}
+
+/* Dark mode skeleton loaders */
+.dark-mode .skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--bg-tertiary) 25%,
+        var(--bg-hover) 50%,
+        var(--bg-tertiary) 75%
+    );
+}
+
+/* Dark mode toast */
+.dark-mode .toast {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+    box-shadow: var(--shadow-lg);
+}
+
+/* Dark mode scrollbar */
+.dark-mode ::-webkit-scrollbar {
+    width: 12px;
+}
+
+.dark-mode ::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+.dark-mode ::-webkit-scrollbar-thumb {
+    background: var(--bg-hover);
+    border-radius: 6px;
+}
+
+.dark-mode ::-webkit-scrollbar-thumb:hover {
+    background: var(--border-hover);
+}
+
+/* Dark mode map popup */
+.dark-mode .leaflet-popup-content-wrapper {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+}
+
+.dark-mode .leaflet-popup-tip {
+    background: var(--bg-secondary);
+}
+
+/* Dark mode stats overlay */
+.dark-mode .stats-overlay {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+/* Dark mode badges */
+.dark-mode .badge {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.dark-mode .badge-primary {
+    background: var(--primary-blue);
+    color: white;
+}
+
+.dark-mode .badge-success {
+    background: var(--success);
+    color: white;
+}
+
+.dark-mode .badge-warning {
+    background: var(--warning);
+    color: #000;
+}
+
+.dark-mode .badge-error {
+    background: var(--error);
+    color: white;
+}
+
+/* Dark mode toggle button */
+.theme-toggle {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--primary-blue);
+    border: none;
+    color: white;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 9997;
+}
+
+.theme-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+}
+
+.theme-toggle svg {
+    width: 24px;
+    height: 24px;
+}
+
+.theme-toggle .icon-sun {
+    display: none;
+}
+
+.theme-toggle .icon-moon {
+    display: block;
+}
+
+.dark-mode .theme-toggle .icon-sun {
+    display: block;
+}
+
+.dark-mode .theme-toggle .icon-moon {
+    display: none;
+}
+
+/* Dark mode transitions */
+.dark-mode-transition,
+.dark-mode-transition * {
+    transition: background-color 0.3s ease,
+                color 0.3s ease,
+                border-color 0.3s ease !important;
+}
+
+/* Dark mode loading overlay */
+.dark-mode .loading-overlay {
+    background: rgba(26, 29, 35, 0.95);
+}
+
+/* Dark mode error containers */
+.dark-mode .error-container {
+    background: var(--bg-secondary);
+    border-color: var(--error);
+}
+
+.dark-mode .error-details {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
+
+/* Dark mode empty state */
+.dark-mode .empty-state {
+    color: var(--text-secondary);
+}
+
+.dark-mode .empty-state-title {
+    color: var(--text-primary);
+}
+
+/* Dark mode progress bar */
+.dark-mode .progress-bar {
+    background: var(--bg-tertiary);
+}
+
+/* Dark mode search history */
+.dark-mode .search-history-dropdown {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-lg);
+}
+
+.dark-mode .search-history-item:hover {
+    background: var(--bg-hover);
+}
+
+/* Dark mode favorites */
+.dark-mode .favorites-panel {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+/* Dark mode keyboard shortcuts help */
+.dark-mode .shortcuts-modal {
+    background: var(--bg-secondary);
+}
+
+.dark-mode .shortcut-key {
+    background: var(--bg-tertiary);
+    border-color: var(--border-color);
+    color: var(--text-primary);
+}
+
+/* Responsive dark mode toggle */
+@media (max-width: 768px) {
+    .theme-toggle {
+        bottom: 5rem;
+        right: 1rem;
+        width: 45px;
+        height: 45px;
+    }
+
+    .theme-toggle svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Print mode - always light */
+@media print {
+    .dark-mode {
+        background: white !important;
+        color: black !important;
+    }
+
+    .dark-mode .card,
+    .dark-mode .modal-content,
+    .dark-mode .chat-message {
+        background: white !important;
+        color: black !important;
+        border-color: #ddd !important;
+    }
+
+    .theme-toggle {
+        display: none !important;
+    }
+}
