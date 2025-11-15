@@ -1,0 +1,337 @@
+/**
+ * Search History UI
+ *
+ * Enhancement #11: Search History
+ * Dropdown with timestamps and filtering
+ */
+
+.search-history-dropdown {
+    background: white;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    max-height: 400px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.search-history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #e0e0e0;
+    background: #f8f9fa;
+}
+
+.search-history-title {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.search-history-clear {
+    background: none;
+    border: none;
+    color: var(--primary-blue, #2c7be5);
+    font-size: 0.85rem;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    transition: background 0.2s;
+}
+
+.search-history-clear:hover {
+    background: rgba(44, 123, 229, 0.1);
+}
+
+.search-history-list {
+    overflow-y: auto;
+    max-height: 340px;
+}
+
+.search-history-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.search-history-item:last-child {
+    border-bottom: none;
+}
+
+.search-history-item:hover {
+    background: #f8f9fa;
+}
+
+.search-history-item-icon {
+    flex-shrink: 0;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+}
+
+.search-history-item-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.search-history-item-query {
+    font-size: 0.9rem;
+    color: #333;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 0.25rem;
+}
+
+.search-history-item-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    color: #6c757d;
+}
+
+.search-history-item-time,
+.search-history-item-results {
+    white-space: nowrap;
+}
+
+.search-history-item-separator {
+    color: #dee2e6;
+}
+
+.search-history-item-delete {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    padding: 0.25rem;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    opacity: 0;
+    transition: all 0.2s;
+}
+
+.search-history-item:hover .search-history-item-delete {
+    opacity: 1;
+}
+
+.search-history-item-delete:hover {
+    background: #fee;
+    color: #dc3545;
+}
+
+.search-history-empty {
+    padding: 3rem 1.5rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+.search-history-empty svg {
+    opacity: 0.3;
+    margin-bottom: 1rem;
+}
+
+.search-history-empty p {
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+/* Search history container positioning */
+.search-history-container {
+    position: relative;
+}
+
+.search-history-dropdown-wrapper {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 0.5rem;
+    z-index: 1000;
+    display: none;
+}
+
+.search-history-dropdown-wrapper.show {
+    display: block;
+}
+
+/* Search input with history icon */
+.search-input-wrapper {
+    position: relative;
+}
+
+.search-history-icon {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    transition: color 0.2s;
+}
+
+.search-history-icon:hover {
+    color: var(--primary-blue, #2c7be5);
+}
+
+/* Scrollbar for history list */
+.search-history-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.search-history-list::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+.search-history-list::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.search-history-list::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+
+/* Dark mode support */
+.dark-mode .search-history-dropdown {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+}
+
+.dark-mode .search-history-header {
+    background: var(--bg-tertiary);
+    border-bottom-color: var(--border-color);
+}
+
+.dark-mode .search-history-title {
+    color: var(--text-primary);
+}
+
+.dark-mode .search-history-clear {
+    color: var(--primary-blue);
+}
+
+.dark-mode .search-history-clear:hover {
+    background: rgba(74, 158, 255, 0.15);
+}
+
+.dark-mode .search-history-item {
+    border-bottom-color: var(--border-color);
+}
+
+.dark-mode .search-history-item:hover {
+    background: var(--bg-hover);
+}
+
+.dark-mode .search-history-item-query {
+    color: var(--text-primary);
+}
+
+.dark-mode .search-history-item-meta {
+    color: var(--text-secondary);
+}
+
+.dark-mode .search-history-item-delete {
+    color: var(--text-secondary);
+}
+
+.dark-mode .search-history-item-delete:hover {
+    background: rgba(255, 82, 82, 0.2);
+    color: #ff5252;
+}
+
+.dark-mode .search-history-empty {
+    color: var(--text-secondary);
+}
+
+.dark-mode .search-history-list::-webkit-scrollbar-track {
+    background: var(--bg-primary);
+}
+
+.dark-mode .search-history-list::-webkit-scrollbar-thumb {
+    background: var(--bg-hover);
+}
+
+.dark-mode .search-history-list::-webkit-scrollbar-thumb:hover {
+    background: var(--border-hover);
+}
+
+/* Animation for dropdown */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-history-dropdown-wrapper.show {
+    animation: slideDown 0.2s ease-out;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .search-history-dropdown {
+        max-height: 300px;
+    }
+
+    .search-history-list {
+        max-height: 240px;
+    }
+
+    .search-history-item {
+        padding: 0.65rem 0.75rem;
+    }
+
+    .search-history-item-query {
+        font-size: 0.85rem;
+    }
+
+    .search-history-item-meta {
+        font-size: 0.7rem;
+    }
+
+    .search-history-item-delete {
+        opacity: 1; /* Always visible on mobile */
+    }
+}
+
+/* Grouped history view */
+.search-history-group {
+    margin-bottom: 0.5rem;
+}
+
+.search-history-group-title {
+    padding: 0.5rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6c757d;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background: #f8f9fa;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+}
+
+.dark-mode .search-history-group-title {
+    background: var(--bg-tertiary);
+    color: var(--text-secondary);
+}
