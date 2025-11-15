@@ -1,0 +1,600 @@
+/**
+ * Mobile Responsive CSS
+ *
+ * Enhancement #14: Mobile Responsiveness
+ * Responsive layouts, touch gestures, bottom sheet for mobile
+ */
+
+/* Mobile breakpoints */
+:root {
+    --mobile-small: 320px;
+    --mobile: 480px;
+    --tablet: 768px;
+    --desktop: 1024px;
+    --desktop-large: 1440px;
+}
+
+/* Base mobile-first styles */
+@media (max-width: 768px) {
+    /* Layout adjustments */
+    body {
+        font-size: 14px;
+        overflow-x: hidden;
+    }
+
+    /* Three-pane layout becomes stacked on mobile */
+    .app-container {
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+    }
+
+    /* Mobile header */
+    .mobile-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 1rem;
+        background: white;
+        border-bottom: 1px solid #e0e0e0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .dark-mode .mobile-header {
+        background: var(--bg-secondary);
+        border-bottom-color: var(--border-color);
+    }
+
+    .mobile-header-title {
+        font-size: 1.1rem;
+        font-weight: 600;
+        margin: 0;
+    }
+
+    .mobile-menu-button {
+        background: none;
+        border: none;
+        padding: 0.5rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Hide desktop navigation */
+    .desktop-nav {
+        display: none;
+    }
+
+    /* Mobile navigation drawer */
+    .mobile-nav-drawer {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 80%;
+        max-width: 300px;
+        height: 100vh;
+        background: white;
+        box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+        transition: left 0.3s ease;
+        z-index: 2000;
+        overflow-y: auto;
+    }
+
+    .dark-mode .mobile-nav-drawer {
+        background: var(--bg-secondary);
+    }
+
+    .mobile-nav-drawer.open {
+        left: 0;
+    }
+
+    .mobile-nav-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s ease;
+        z-index: 1999;
+    }
+
+    .mobile-nav-overlay.show {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    /* Chat panel - full width on mobile */
+    #chatPanel {
+        width: 100% !important;
+        height: 50vh;
+        border-right: none;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    /* Map panel - takes remaining space */
+    #mapPanel {
+        width: 100% !important;
+        height: 50vh;
+        flex: 1;
+    }
+
+    /* Project details - bottom sheet */
+    #projectPanel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        height: 0;
+        max-height: 80vh;
+        background: white;
+        border-radius: 16px 16px 0 0;
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+        transition: height 0.3s ease;
+        overflow: hidden;
+        z-index: 1500;
+    }
+
+    .dark-mode #projectPanel {
+        background: var(--bg-secondary);
+    }
+
+    #projectPanel.open {
+        height: 70vh;
+    }
+
+    /* Bottom sheet handle */
+    .bottom-sheet-handle {
+        width: 40px;
+        height: 4px;
+        background: #ccc;
+        border-radius: 2px;
+        margin: 12px auto 8px;
+        cursor: grab;
+    }
+
+    .bottom-sheet-handle:active {
+        cursor: grabbing;
+    }
+
+    /* Touch-friendly buttons */
+    button {
+        min-height: 44px;
+        min-width: 44px;
+        padding: 0.75rem 1rem;
+    }
+
+    /* Form inputs - larger touch targets */
+    input,
+    textarea,
+    select {
+        min-height: 44px;
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 0.75rem;
+    }
+
+    /* Chat input area */
+    .chat-input-container {
+        padding: 1rem;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .dark-mode .chat-input-container {
+        background: var(--bg-secondary);
+        border-top-color: var(--border-color);
+    }
+
+    #chatInput {
+        font-size: 16px;
+        padding: 0.875rem;
+    }
+
+    /* Chat messages - better spacing */
+    .chat-message {
+        padding: 1rem;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
+
+    /* Project cards - full width */
+    .project-card {
+        width: 100%;
+        margin-bottom: 1rem;
+    }
+
+    /* Stats overlay - mobile version */
+    .stats-overlay {
+        position: static;
+        width: 100%;
+        padding: 1rem;
+        border-radius: 0;
+        margin-bottom: 1rem;
+    }
+
+    /* Modal - full screen on mobile */
+    .modal-dialog {
+        margin: 0;
+        max-width: 100%;
+        height: 100vh;
+    }
+
+    .modal-content {
+        border-radius: 0;
+        height: 100%;
+    }
+
+    /* Settings modal */
+    .settings-modal .modal-body {
+        padding: 1rem;
+    }
+
+    /* Map controls - repositioned */
+    .leaflet-top.leaflet-left {
+        top: 60px;
+        left: 10px;
+    }
+
+    .leaflet-top.leaflet-right {
+        top: 60px;
+        right: 10px;
+    }
+
+    .leaflet-bottom {
+        bottom: 10px;
+    }
+
+    /* Theme toggle button - repositioned */
+    .theme-toggle {
+        bottom: 80px;
+        right: 1rem;
+        width: 48px;
+        height: 48px;
+    }
+
+    /* Toast notifications - full width */
+    .toast {
+        left: 1rem;
+        right: 1rem;
+        bottom: 1rem;
+        max-width: none;
+    }
+
+    /* Error containers - mobile friendly */
+    .error-container {
+        padding: 1rem;
+        margin: 0.75rem 0;
+    }
+
+    .error-actions {
+        flex-direction: column;
+    }
+
+    .error-action-btn {
+        width: 100%;
+    }
+
+    /* Loading overlay text - smaller */
+    .loading-overlay-text {
+        font-size: 0.85rem;
+    }
+
+    /* Search history dropdown - full width */
+    .search-history-dropdown {
+        max-height: 60vh;
+    }
+
+    /* Tables - horizontal scroll */
+    .table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        font-size: 0.85rem;
+    }
+
+    /* Cards - optimized spacing */
+    .card {
+        border-radius: 8px;
+        margin-bottom: 1rem;
+    }
+
+    .card-header {
+        padding: 0.875rem 1rem;
+    }
+
+    .card-body {
+        padding: 1rem;
+    }
+
+    /* News panel - bottom sheet */
+    .news-panel {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        max-height: 60vh;
+        background: white;
+        border-radius: 16px 16px 0 0;
+        box-shadow: 0 -4px 12px rgba(0,0,0,0.15);
+        transform: translateY(100%);
+        transition: transform 0.3s ease;
+        z-index: 1400;
+        overflow-y: auto;
+    }
+
+    .news-panel.open {
+        transform: translateY(0);
+    }
+
+    /* Tabs - scrollable */
+    .nav-tabs {
+        overflow-x: auto;
+        overflow-y: hidden;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .nav-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* Floating action button */
+    .mobile-fab {
+        position: fixed;
+        bottom: 1.5rem;
+        right: 1.5rem;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background: var(--primary-blue);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1300;
+        transition: transform 0.2s;
+    }
+
+    .mobile-fab:active {
+        transform: scale(0.95);
+    }
+
+    /* Swipe indicators */
+    .swipe-indicator {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 40px;
+        height: 40px;
+        background: rgba(0,0,0,0.3);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .swipe-indicator.left {
+        left: 10px;
+    }
+
+    .swipe-indicator.right {
+        right: 10px;
+    }
+
+    .swipe-indicator.show {
+        opacity: 1;
+    }
+}
+
+/* Tablet adjustments (768px - 1024px) */
+@media (min-width: 769px) and (max-width: 1024px) {
+    /* Two-column layout for tablet */
+    .app-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 60vh 40vh;
+    }
+
+    #chatPanel {
+        grid-column: 1;
+        grid-row: 1;
+    }
+
+    #mapPanel {
+        grid-column: 2;
+        grid-row: 1 / 3;
+    }
+
+    #projectPanel {
+        grid-column: 1;
+        grid-row: 2;
+    }
+
+    /* Adjust font sizes */
+    body {
+        font-size: 15px;
+    }
+
+    /* Theme toggle */
+    .theme-toggle {
+        bottom: 2rem;
+        right: 2rem;
+    }
+}
+
+/* Landscape mobile */
+@media (max-width: 768px) and (orientation: landscape) {
+    /* Horizontal layout in landscape */
+    .app-container {
+        flex-direction: row;
+    }
+
+    #chatPanel {
+        width: 40% !important;
+        height: 100vh;
+        border-right: 1px solid #e0e0e0;
+        border-bottom: none;
+    }
+
+    #mapPanel {
+        width: 60% !important;
+        height: 100vh;
+    }
+
+    /* Bottom sheet becomes side panel */
+    #projectPanel {
+        position: fixed;
+        bottom: auto;
+        right: 0;
+        left: auto;
+        top: 0;
+        width: 0;
+        max-width: 400px;
+        height: 100vh;
+        border-radius: 0;
+    }
+
+    #projectPanel.open {
+        width: 90%;
+        height: 100vh;
+    }
+}
+
+/* Small mobile (320px - 480px) */
+@media (max-width: 480px) {
+    /* Further optimizations */
+    body {
+        font-size: 13px;
+    }
+
+    .mobile-header {
+        padding: 0.75rem;
+    }
+
+    .mobile-header-title {
+        font-size: 1rem;
+    }
+
+    button {
+        font-size: 0.9rem;
+    }
+
+    .chat-message {
+        font-size: 0.9rem;
+        padding: 0.875rem;
+    }
+
+    .card {
+        margin-bottom: 0.75rem;
+    }
+
+    .card-body {
+        padding: 0.875rem;
+    }
+
+    /* Smaller theme toggle */
+    .theme-toggle {
+        width: 44px;
+        height: 44px;
+        bottom: 70px;
+    }
+
+    .theme-toggle svg {
+        width: 20px;
+        height: 20px;
+    }
+}
+
+/* Touch gestures */
+.swipeable {
+    touch-action: pan-y;
+    user-select: none;
+}
+
+.no-scroll {
+    overflow: hidden;
+}
+
+/* Pull to refresh indicator */
+.pull-to-refresh {
+    position: absolute;
+    top: -50px;
+    left: 0;
+    right: 0;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-blue);
+    transition: top 0.3s;
+}
+
+.pull-to-refresh.active {
+    top: 0;
+}
+
+/* iOS safe area support */
+@supports (padding: max(0px)) {
+    .mobile-header {
+        padding-top: max(1rem, env(safe-area-inset-top));
+        padding-left: max(1rem, env(safe-area-inset-left));
+        padding-right: max(1rem, env(safe-area-inset-right));
+    }
+
+    .chat-input-container {
+        padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    }
+
+    .mobile-fab {
+        bottom: max(1.5rem, calc(env(safe-area-inset-bottom) + 0.5rem));
+        right: max(1.5rem, calc(env(safe-area-inset-right) + 0.5rem));
+    }
+
+    #projectPanel {
+        padding-bottom: env(safe-area-inset-bottom);
+    }
+}
+
+/* Prevent text selection on touch */
+.no-select {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* Tap highlight removal */
+* {
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* Better scrolling on mobile */
+.smooth-scroll {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+}
+
+/* Hide scrollbars on mobile but keep functionality */
+@media (max-width: 768px) {
+    .hide-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .hide-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+}

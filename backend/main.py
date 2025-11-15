@@ -116,11 +116,117 @@ async def serve_ui():
 
 @app.get("/health")
 async def health_check():
-    """Health check endpoint"""
-    return {
+    """
+    Enhanced health check endpoint
+
+    Enhancement #33: Enhanced Health Check
+    Returns detailed status of all components
+    """
+    from datetime import datetime
+
+    health_status = {
         "status": "healthy",
-        "projects_loaded": len(project_service.df)
-        if project_service and project_service.df is not None
-        else 0,
-        "vector_db_ready": vector_service is not None,
+        "timestamp": datetime.now().isoformat(),
+        "version": "1.0.0",
+        "components": {}
     }
+
+    # Check project service
+    try:
+        if project_service and project_service.df is not None:
+            project_count = len(project_service.df)
+            health_status["components"]["project_service"] = {
+                "status": "healthy" if project_count > 0 else "degraded",
+                "projects_loaded": project_count,
+                "data_file": str(settings.projects_csv)
+            }
+        else:
+            health_status["components"]["project_service"] = {
+                "status": "unhealthy",
+                "error": "Project service not initialized"
+            }
+    except Exception as e:
+        health_status["components"]["project_service"] = {
+            "status": "unhealthy",
+            "error": str(e)
+        }
+
+    # Check vector DB
+    try:
+        if vector_service:
+            # Try to get collection stats
+            try:
+                projects_col = vector_service.get_or_create_projects_collection()
+                news_col = vector_service.get_or_create_news_collection()
+
+                projects_count = projects_col.count() if hasattr(projects_col, 'count') else 0
+                news_count = news_col.count() if hasattr(news_col, 'count') else 0
+
+                health_status["components"]["vector_db"] = {
+                    "status": "healthy",
+                    "projects_indexed": projects_count,
+                    "news_indexed": news_count,
+                    "persist_dir": str(settings.chroma_persist_dir)
+                }
+            except:
+                health_status["components"]["vector_db"] = {
+                    "status": "degraded",
+                    "message": "Collections initialized but stats unavailable"
+                }
+        else:
+            health_status["components"]["vector_db"] = {
+                "status": "unhealthy",
+                "error": "Vector service not initialized"
+            }
+    except Exception as e:
+        health_status["components"]["vector_db"] = {
+            "status": "unhealthy",
+            "error": str(e)
+        }
+
+    # Check news service
+    try:
+        if news_service:
+            health_status["components"]["news_service"] = {
+                "status": "healthy",
+                "message": "News service ready"
+            }
+        else:
+            health_status["components"]["news_service"] = {
+                "status": "unhealthy",
+                "error": "News service not initialized"
+            }
+    except Exception as e:
+        health_status["components"]["news_service"] = {
+            "status": "unhealthy",
+            "error": str(e)
+        }
+
+    # Check LLM service
+    try:
+        if llm_service:
+            health_status["components"]["llm_service"] = {
+                "status": "healthy",
+                "message": "LLM service ready"
+            }
+        else:
+            health_status["components"]["llm_service"] = {
+                "status": "unhealthy",
+                "error": "LLM service not initialized"
+            }
+    except Exception as e:
+        health_status["components"]["llm_service"] = {
+            "status": "unhealthy",
+            "error": str(e)
+        }
+
+    # Overall status based on components
+    component_statuses = [c.get("status") for c in health_status["components"].values()]
+    if "unhealthy" in component_statuses:
+        health_status["status"] = "unhealthy"
+    elif "degraded" in component_statuses:
+        health_status["status"] = "degraded"
+    else:
+        health_status["status"] = "healthy"
+
+    return health_status
