@@ -1,0 +1,244 @@
+{
+  "templates": [
+    {
+      "id": "regional_overview",
+      "name": "Regional Overview",
+      "description": "View all projects in a specific region for a given year",
+      "query": "Show all projects in {region} for {year}",
+      "params": [
+        {
+          "name": "region",
+          "type": "string",
+          "description": "Region name (e.g., NCR, Region I, CALABARZON)",
+          "required": true
+        },
+        {
+          "name": "year",
+          "type": "integer",
+          "description": "Year (e.g., 2023, 2024)",
+          "required": true
+        }
+      ],
+      "category": "overview"
+    },
+    {
+      "id": "contractor_analysis",
+      "name": "Contractor Analysis",
+      "description": "Analyze a specific contractor's projects above a budget threshold",
+      "query": "Analyze {contractor}'s projects over ₱{min_budget}M",
+      "params": [
+        {
+          "name": "contractor",
+          "type": "string",
+          "description": "Contractor name",
+          "required": true
+        },
+        {
+          "name": "min_budget",
+          "type": "number",
+          "description": "Minimum budget in millions (e.g., 10 for ₱10M)",
+          "required": true
+        }
+      ],
+      "category": "contractor"
+    },
+    {
+      "id": "budget_comparison",
+      "name": "Budget Comparison",
+      "description": "Compare total budgets between two years",
+      "query": "Compare total budgets between {year1} and {year2}",
+      "params": [
+        {
+          "name": "year1",
+          "type": "integer",
+          "description": "First year",
+          "required": true
+        },
+        {
+          "name": "year2",
+          "type": "integer",
+          "description": "Second year",
+          "required": true
+        }
+      ],
+      "category": "comparison"
+    },
+    {
+      "id": "province_projects",
+      "name": "Province Projects",
+      "description": "List all projects in a specific province",
+      "query": "Show all flood control projects in {province}",
+      "params": [
+        {
+          "name": "province",
+          "type": "string",
+          "description": "Province name (e.g., Bulacan, Pampanga, Laguna)",
+          "required": true
+        }
+      ],
+      "category": "overview"
+    },
+    {
+      "id": "high_value_projects",
+      "name": "High Value Projects",
+      "description": "Find projects exceeding a cost threshold",
+      "query": "Find all projects with costs over ₱{threshold}M in {year}",
+      "params": [
+        {
+          "name": "threshold",
+          "type": "number",
+          "description": "Cost threshold in millions",
+          "required": true
+        },
+        {
+          "name": "year",
+          "type": "integer",
+          "description": "Year (optional)",
+          "required": false
+        }
+      ],
+      "category": "search"
+    },
+    {
+      "id": "municipality_comparison",
+      "name": "Municipality Comparison",
+      "description": "Compare projects between municipalities",
+      "query": "Compare flood projects in {municipality1} vs {municipality2}",
+      "params": [
+        {
+          "name": "municipality1",
+          "type": "string",
+          "description": "First municipality",
+          "required": true
+        },
+        {
+          "name": "municipality2",
+          "type": "string",
+          "description": "Second municipality",
+          "required": true
+        }
+      ],
+      "category": "comparison"
+    },
+    {
+      "id": "contractor_regional_work",
+      "name": "Contractor Regional Work",
+      "description": "View a contractor's work in a specific region",
+      "query": "What projects has {contractor} completed in {region}?",
+      "params": [
+        {
+          "name": "contractor",
+          "type": "string",
+          "description": "Contractor name",
+          "required": true
+        },
+        {
+          "name": "region",
+          "type": "string",
+          "description": "Region name",
+          "required": true
+        }
+      ],
+      "category": "contractor"
+    },
+    {
+      "id": "yearly_trends",
+      "name": "Yearly Trends",
+      "description": "Analyze budget and project trends over a year range",
+      "query": "Show budget trends from {start_year} to {end_year}",
+      "params": [
+        {
+          "name": "start_year",
+          "type": "integer",
+          "description": "Start year",
+          "required": true
+        },
+        {
+          "name": "end_year",
+          "type": "integer",
+          "description": "End year",
+          "required": true
+        }
+      ],
+      "category": "analytics"
+    },
+    {
+      "id": "top_contractors",
+      "name": "Top Contractors",
+      "description": "List top contractors by total project value",
+      "query": "Who are the top {n} contractors by total project value in {year}?",
+      "params": [
+        {
+          "name": "n",
+          "type": "integer",
+          "description": "Number of contractors (e.g., 10)",
+          "required": true
+        },
+        {
+          "name": "year",
+          "type": "integer",
+          "description": "Year (optional)",
+          "required": false
+        }
+      ],
+      "category": "analytics"
+    },
+    {
+      "id": "project_type_analysis",
+      "name": "Project Type Analysis",
+      "description": "Analyze projects by type of work",
+      "query": "Show all {work_type} projects in {location}",
+      "params": [
+        {
+          "name": "work_type",
+          "type": "string",
+          "description": "Type of work (e.g., flood control, drainage, river improvement)",
+          "required": true
+        },
+        {
+          "name": "location",
+          "type": "string",
+          "description": "Province or region",
+          "required": true
+        }
+      ],
+      "category": "search"
+    },
+    {
+      "id": "budget_range_search",
+      "name": "Budget Range Search",
+      "description": "Find projects within a budget range",
+      "query": "Find projects between ₱{min_budget}M and ₱{max_budget}M",
+      "params": [
+        {
+          "name": "min_budget",
+          "type": "number",
+          "description": "Minimum budget in millions",
+          "required": true
+        },
+        {
+          "name": "max_budget",
+          "type": "number",
+          "description": "Maximum budget in millions",
+          "required": true
+        }
+      ],
+      "category": "search"
+    },
+    {
+      "id": "recent_projects",
+      "name": "Recent Projects",
+      "description": "View most recent projects",
+      "query": "Show the latest flood control projects from the past {n} years",
+      "params": [
+        {
+          "name": "n",
+          "type": "integer",
+          "description": "Number of years (e.g., 2, 3, 5)",
+          "required": true
+        }
+      ],
+      "category": "overview"
+    }
+  ]
+}
